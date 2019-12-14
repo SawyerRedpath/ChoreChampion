@@ -1,4 +1,9 @@
-﻿
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model int
+<div class="row">
+    <div class="col-6">
+        <input type="submit" class="btn btn-danger form-control" asp-route-Id="@Model" value="Delete" />
+    </div>
+    <div class="col-6">
+        <a asp-action="Index" class="btn btn-success form-control"><i class="fas fa-undo-alt"></i>&nbsp; Back</a>
+    </div>
+</div>

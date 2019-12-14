@@ -58,7 +58,8 @@ button.accept-policy {
 html {
     position: relative;
     min-height: 100%;
-}41
+}
+
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
@@ -75,6 +76,10 @@ body {
 .search-background {
     background: url('/images/background3.jpg');
     font-family: 'Roboto', sans-serif;
+}
+
+.header-bold {
+    font-family: 'Roboto Slab', serif;
 }
 
 .backgroundWhite {
