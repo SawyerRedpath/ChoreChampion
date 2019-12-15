@@ -6,10 +6,12 @@
 }
 
 <br />
-<h2 class="text-dark header-bold">Create Sub Category</h2>
+<h2 class="text-white header-bold">Create Sub Category</h2>
 <br />
 
-<div class="border backgroundWhite">
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+<div class="border backgroundWhite row">
     <div class="col-8 border-right">
         <form asp-action="Create">
 
@@ -43,8 +45,50 @@
         {
             <p>Existing Sub Categories:</p>
             <div id="SubCategoryList">
-                <ul class="list-group"></ul>
+                <ul class="list-group list-group-flush"></ul>
             </div>
         }
     </div>
 </div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        function updateSubCategoryList() {
+
+            // Get the current category selected id
+            let categorySelected = document.getElementById("ddlCategoryList").value;
+
+            // Reference to our subcategory list div
+            $list = $('#SubCategoryList');
+
+            // Call the GetSubCategory action, passing along the category selected id as a parameter, parse the JSON results and iterate through the results, appending each subcategory to our list
+            $.ajax({
+                url: '/Admin/SubCategory/GetSubCategory/' + categorySelected,
+                type: 'GET',
+                dataType: 'text',
+                success: function (data) {
+                    results = JSON.parse(data);
+                    $list.html('');
+                    let html = '<ul class="list-group list-group-flush">';
+                    for (i in results) {
+                        html += '<li class="list-group-item non-bold-text"> ' + results[i].text + '</li>';
+                    }
+                    html += '</ul>'
+                    $list.append(html);
+                }
+            });
+        }
+
+        // When the page first loads we will call the function to update our subcategory list on the side
+        $(document).ready(function () {
+            updateSubCategoryList();
+        });
+
+        // When the selected category changes, we call the function again to update the subcategory list to reflect newly chosen category
+        $("#ddlCategoryList").on("change", function () {
+            updateSubCategoryList();
+        });
+    </script>
+}

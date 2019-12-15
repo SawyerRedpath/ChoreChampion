@@ -63,6 +63,11 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
+
+}
+
+#body {
+    font-family: 'Roboto', sans-serif !important;
 }
 
 .footer {
@@ -73,13 +78,23 @@ body {
     line-height: 60px; /* Vertically center the text there */
 }
 
+/*Backgrounds*/
+
 .search-background {
     background: url('/images/background3.jpg');
-    font-family: 'Roboto', sans-serif;
+}
+
+.darkened-background {
+    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('/images/background5.jpg');
+    background-size: cover;
 }
 
 .header-bold {
     font-family: 'Roboto Slab', serif;
+}
+
+.text-white.header-bold {
+    text-shadow: 2px 2px black;
 }
 
 .backgroundWhite {
@@ -87,6 +102,7 @@ body {
     padding: 30px;
     border-radius: 10px;
     margin-bottom: 30px;
+    font-weight: bold;
 }
 
 .backgroundWhiteBorder {
@@ -95,6 +111,7 @@ body {
     border-radius: 10px;
     margin-bottom: 30px;
     border: 1px solid #ddd;
+    font-weight: bold;
 }
 
 .backgroundWhiteBorder10Padding {
@@ -102,4 +119,14 @@ body {
     padding: 10px;
     border-radius: 10px;
     border: 1px solid #ddd;
+    font-weight: bold;
+}
+
+#header-logo {
+    width: 50px;
+    height: auto;
+}
+
+.non-bold-text {
+    font-weight: normal;
 }
