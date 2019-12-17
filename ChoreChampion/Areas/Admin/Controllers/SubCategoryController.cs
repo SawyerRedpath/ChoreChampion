@@ -95,5 +95,72 @@ namespace ChoreChampion.Areas.Admin.Controllers
 
             return Json(new SelectList(subCategories, "Id", "Name"));
         }
+
+        // GET - Edit
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var subCategory = await _db.SubCategory.SingleOrDefaultAsync(m => m.Id == id);
+
+                if (subCategory == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    SubCategoryAndCategoryViewModel model = new SubCategoryAndCategoryViewModel()
+                    {
+                        CategoryList = await _db.Category.ToListAsync(),
+                        SubCategory = subCategory,
+                        // Get subcategories ordered by name, return each subcategory name, return only distinct records
+                        SubCategoryList = await _db.SubCategory.OrderBy(p => p.Name).Select(p => p.Name).Distinct().ToListAsync()
+                    };
+                    return View(model);
+                }
+            }
+        }
+
+        // POST - Edit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, SubCategoryAndCategoryViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Get all the records where the name matches the models name, and is contained in the same category
+                var subCategoryExists = _db.SubCategory.Include(s => s.Category).Where(s => s.Name == model.SubCategory.Name && s.Category.Id == model.SubCategory.CategoryId);
+
+                // If the subcategory already exists in this given category
+                if (subCategoryExists.Count() > 0)
+                {
+                    // Error, not allowed
+                    StatusMessage = "Error: Another Sub Category with this name exists under " + subCategoryExists.First().Category.Name + " category. Please use a different name.";
+                }
+                else
+                {
+                    // Find the id from the database that matches the id passed in
+                    var subCategoryFromDb = await _db.SubCategory.FindAsync(id);
+                    // Change the name for that subcategory to the new passed in name
+                    subCategoryFromDb.Name = model.SubCategory.Name;
+
+                    await _db.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+
+            SubCategoryAndCategoryViewModel modelVM = new SubCategoryAndCategoryViewModel()
+            {
+                CategoryList = await _db.Category.ToListAsync(),
+                SubCategory = model.SubCategory,
+                SubCategoryList = await _db.SubCategory.OrderBy(p => p.Name).Select(p => p.Name).ToListAsync(),
+                StatusMessage = StatusMessage
+            };
+            return View(modelVM);
+        }
     }
 }
