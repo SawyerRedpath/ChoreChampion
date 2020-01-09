@@ -128,7 +128,7 @@ namespace ChoreChampion.Areas.Admin.Controllers
         // POST - Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, SubCategoryAndCategoryViewModel model)
+        public async Task<IActionResult> Edit(SubCategoryAndCategoryViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -144,7 +144,7 @@ namespace ChoreChampion.Areas.Admin.Controllers
                 else
                 {
                     // Find the id from the database that matches the id passed in
-                    var subCategoryFromDb = await _db.SubCategory.FindAsync(id);
+                    var subCategoryFromDb = await _db.SubCategory.FindAsync(model.SubCategory.Id);
                     // Change the name for that subcategory to the new passed in name
                     subCategoryFromDb.Name = model.SubCategory.Name;
 
@@ -161,6 +161,49 @@ namespace ChoreChampion.Areas.Admin.Controllers
                 StatusMessage = StatusMessage
             };
             return View(modelVM);
+        }
+
+        //GET Details
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var subCategory = await _db.SubCategory.Include(s => s.Category).SingleOrDefaultAsync(m => m.Id == id);
+            if (subCategory == null)
+            {
+                return NotFound();
+            }
+
+            return View(subCategory);
+        }
+
+        //GET Delete
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var subCategory = await _db.SubCategory.Include(s => s.Category).SingleOrDefaultAsync(m => m.Id == id);
+            if (subCategory == null)
+            {
+                return NotFound();
+            }
+
+            return View(subCategory);
+        }
+
+        //POST Delete
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var subCategory = await _db.SubCategory.SingleOrDefaultAsync(m => m.Id == id);
+            _db.SubCategory.Remove(subCategory);
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }
