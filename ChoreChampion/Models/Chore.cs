@@ -18,8 +18,10 @@ namespace ChoreChampion.Models
 
         public bool IsComplete { get; set; }
 
+        [Display(Name = "Before Picture")]
         public string BeforeImage { get; set; }
 
+        [Display(Name = "Due Date")]
         public DateTime DueDate { get; set; }
 
         [ForeignKey("CategoryId")]
