@@ -53,7 +53,7 @@
                                 @Html.DisplayFor(m => item.SubCategory.Name)
                             </td>
                             <td class="non-bold-text">
-                                @Html.DisplayFor(m => item.DueDate)
+                                @item.DueDate.ToString("dddd, MMMM dd, yyyy")
                             </td>
                             <td>
                                 <partial name="_TableEditDetailDeleteButtonsPartial" model="item.Id" />
