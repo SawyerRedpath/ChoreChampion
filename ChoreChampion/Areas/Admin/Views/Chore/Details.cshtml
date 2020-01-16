@@ -1,0 +1,126 @@
+﻿@model ChoreChampion.Models.ViewModels.ChoreViewModel
+@using ChoreChampion.Extensions
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-white header-bold">Chore Details</h2>
+<br />
+
+<form method="post" enctype="multipart/form-data">
+    <div class="border backgroundWhite row">
+        <div class="col-8">
+            <fieldset disabled>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Chore.Name" class="col-form-label"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Chore.Name" class="form-control" />
+                    </div>
+                    <span asp-validation-for="Chore.Name" class="text-danger"></span>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Chore.Description" class="col-form-label"></label>
+                    </div>
+                    <div class="col-8">
+                        @Html.TextAreaFor(m => m.Chore.Description)
+                    </div>
+                    <span asp-validation-for="Chore.Description" class="text-danger"></span>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Chore.BeforeImage" class="col-form-label"></label>
+                    </div>
+                    <div class="col-8">
+                        <input type="file" name="files" multiple class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Chore.CategoryId" class="col-form-label"></label>
+                    </div>
+                    <div class="col-8">
+                        <select asp-for="@Model.Chore.CategoryId" id="CategoryId" asp-items="Model.Category.ToSelectListItem(Model.Chore.CategoryId)" class="form-control"></select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Chore.SubCategoryId" class="col-form-label"></label>
+                    </div>
+                    <div class="col-8">
+                        <select asp-for="@Model.Chore.SubCategoryId" name="SubCategoryId" id="SubCategoryId" asp-items="@(new SelectList(string.Empty,"Id","Name"))" class="form-control"></select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Chore.DueDate" class="col-form-label"></label>
+                    </div>
+
+                    <div class="col-8">
+                        <div id="datepicker" class="input-group date" data-date-format="mm-dd-yyyy">
+                            <input asp-for="@Model.Chore.DueDate" class="form-control" type="text" readonly />
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="col-3 offset-1">
+            <img src="@Model.Chore.BeforeImage" width="100%" style="border-radius:5px;border: 1px solid #bbb9b9;" />
+        </div>
+
+        <div class="col-8">
+            <div class="col-8 offset-4">
+                <partial name="_DetailsAndBackToListButtons" model="Model.Chore.Id" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: "lists",
+            menubar: 'edit format',
+            readonly: 1
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+  $("#datepicker").datepicker({
+        autoclose: true,
+        todayHighlight: true
+  }).datepicker('update', new Date());
+});
+
+        $("#Date").datepicker();
+    $(document).ready(function () {
+        getSubCategory();
+        $('#CategoryId').change(function () {
+            getSubCategory();
+        });
+    });
+
+    function getSubCategory() {
+        var url = '@Url.Content("~/")' + "Admin/SubCategory/GetSubCategory";
+        var ddlsource = '#CategoryId';
+        $.getJSON(url, { id: $(ddlsource).val() }, function (data) {
+            var items = '';
+            $('#SubCategoryId').empty();
+            $.each(data, function (i, subcategory) {
+                items+= "<option value='" + subcategory.value + "'>" + subcategory.text + "</option>"
+            });
+
+            $('#SubCategoryId').html(items);
+        })
+    }
+    </script>
+
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

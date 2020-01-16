@@ -33,6 +33,7 @@ namespace ChoreChampion.Areas.Admin.Controllers
             };
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             // .Include to use eager loading to include associated category and subcategory.
@@ -41,6 +42,7 @@ namespace ChoreChampion.Areas.Admin.Controllers
         }
 
         // GET - CREATE
+        [HttpGet]
         public IActionResult Create()
         {
             return View(ChoreVM);
@@ -96,6 +98,158 @@ namespace ChoreChampion.Areas.Admin.Controllers
             {
                 return View(ChoreVM);
             }
+        }
+
+        // GET - Edit
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            ChoreVM.Chore = await _db.Chore.Include(m => m.Category).Include(m => m.SubCategory).SingleOrDefaultAsync(m => m.Id == id);
+            ChoreVM.SubCategory = await _db.SubCategory.Where(s => s.CategoryId == ChoreVM.Chore.CategoryId).ToListAsync();
+
+            if (ChoreVM.Chore == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return View(ChoreVM);
+            }
+        }
+
+        // POST - Edit
+        [HttpPost, ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        // The menu item viewmodel does not need to be passed to the method because I have used the BindProperty above
+        public async Task<IActionResult> EditPOST(int? id)
+        {
+            ChoreVM.Chore.SubCategoryId = Convert.ToInt32(Request.Form["SubCategoryId"].ToString());
+
+            if (ModelState.IsValid)
+            {
+                // Image saving below
+                string webRootPath = _hostingEnvironment.WebRootPath;
+                // Uploaded files from the form (will only be one)
+                var files = HttpContext.Request.Form.Files;
+
+                // The chore that was just added to the database
+                var choreFromDb = await _db.Chore.FindAsync(ChoreVM.Chore.Id);
+
+                // New image has been uploaded
+                if (files.Count > 0)
+                {
+                    var uploads = Path.Combine(webRootPath, "images");
+                    var extension_new = Path.GetExtension(files[0].FileName);
+
+                    // Delete the original image
+                    var imagePath = Path.Combine(webRootPath, choreFromDb.BeforeImage.TrimStart('\\'));
+
+                    if (System.IO.File.Exists(imagePath))
+                    {
+                        System.IO.File.Delete(imagePath);
+                    }
+
+                    // Upload new image
+                    using (var fileStream = new FileStream(Path.Combine(uploads, ChoreVM.Chore.Id + extension_new), FileMode.Create))
+                    {
+                        files[0].CopyTo(fileStream);
+                    }
+                    choreFromDb.BeforeImage = @"\images\" + ChoreVM.Chore.Id + extension_new;
+                }
+
+                // Incase user has changed any of these fields, make the changes
+                choreFromDb.Name = ChoreVM.Chore.Name;
+                choreFromDb.Description = ChoreVM.Chore.Description;
+                choreFromDb.DueDate = ChoreVM.Chore.DueDate;
+                choreFromDb.CategoryId = ChoreVM.Chore.CategoryId;
+                choreFromDb.SubCategoryId = ChoreVM.Chore.SubCategoryId;
+                choreFromDb.Name = ChoreVM.Chore.Name;
+
+                await _db.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                ChoreVM.SubCategory = await _db.SubCategory.Where(s => s.CategoryId == ChoreVM.Chore.CategoryId).ToListAsync();
+                return View(ChoreVM);
+            }
+        }
+
+        // GET - Details
+        [HttpGet]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                // Find the chore with id matching the one passed in
+                ChoreVM.Chore = await _db.Chore.Include(m => m.Category).Include(m => m.SubCategory).SingleOrDefaultAsync(m => m.Id == id);
+
+                if (ChoreVM.Chore == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return View(ChoreVM);
+                }
+            }
+        }
+
+        // GET - Delete
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                ChoreVM.Chore = await _db.Chore.Include(m => m.Category).Include(m => m.SubCategory).SingleOrDefaultAsync(m => m.Id == id);
+
+                if (ChoreVM.Chore == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return View(ChoreVM);
+                }
+            }
+        }
+
+        // Post - Delete
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            string webRootPath = _hostingEnvironment.WebRootPath;
+            Chore chore = await _db.Chore.FindAsync(id);
+
+            if (chore != null)
+            {
+                var imagePath = Path.Combine(webRootPath, chore.BeforeImage.TrimStart('\\'));
+
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+
+                _db.Chore.Remove(chore);
+                await _db.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
