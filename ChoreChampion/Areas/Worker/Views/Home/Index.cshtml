@@ -1,8 +1,33 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
+<body>
+    <div class="text-center" id="landing-page">
+        <h1 class="text-white header-bold">Welcome to ChoreChampion</h1>
+    </div>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    <div class="d-flex">
+        <div class="landing-page-intro-container w-50 p-4 bg-dark">
+            <p id="heavier-font-italicized">
+                ChoreChampion is an application that makes managing house-hold chores easier than ever.
+            </p>
+            <hr id="landing-page-hr" />
+            <ul class="landing-page-list">
+                <li>
+                    Create new chores with due dates, before pictures and descriptions.
+                </li>
+                <li>Assign chores to users.</li>
+                <li>Create recurring chores.</li>
+                <li>
+                    Create categories and subcategories for easier organization of chores.
+                </li>
+                <li>Give users points for completing chores that can be returned for rewards.</li>
+            </ul>
+        </div>
+
+        <div class="p-4 flex-fill">
+            <a asp-area="Identity" asp-controller="Account" asp-action="Login" type="button" class="btn btn-primary btn-lg btn-block">Log In</a>
+            <a asp-area="Identity" asp-controller="Account" asp-action="Register" type="button" class="btn btn-success btn-lg btn-block">Register</a>
+        </div>
+    </div>
+</body>

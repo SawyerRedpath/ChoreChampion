@@ -63,7 +63,6 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
-
 }
 
 #body {
@@ -122,6 +121,17 @@ body {
     font-weight: bold;
 }
 
+.landing-page-intro-container {
+    background-color: #A9B2AC;
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    padding: 20px;
+    color: white;
+    border-radius: 2%;
+    border: 1px solid #564f4f;
+}
+
 #header-logo {
     width: 50px;
     height: auto;
@@ -129,4 +139,31 @@ body {
 
 .non-bold-text {
     font-weight: normal;
+}
+
+#landing-page h1 {
+    font-size: 4rem;
+    padding-top: 1.1%;
+    padding-bottom: 4%;
+}
+
+#heavier-font-italicized {
+    font-size: 120%;
+    font-weight: bolder;
+    font-style: italic;
+}
+
+.landing-page-list {
+padding-left: 0.8rem;
+}
+
+#landing-page-hr {
+    color: white;
+    border-color: white;
+    background-color: white;
+}
+
+.landing-page-list li{
+    padding-top: 0.8rem;
+    padding-left: none;
 }
