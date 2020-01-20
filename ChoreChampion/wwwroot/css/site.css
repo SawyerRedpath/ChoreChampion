@@ -83,8 +83,48 @@ body {
     background: url('/images/background3.jpg');
 }
 
-.darkened-background {
+.darkened-background0 {
+    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('/images/background1.jpg');
+    background-size: cover;
+}
+
+.darkened-background1 {
+    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('/images/background2.jpg');
+    background-size: cover;
+}
+
+.darkened-background2 {
+    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('/images/background3.jpg');
+    background-size: cover;
+}
+
+.darkened-background3 {
+    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('/images/background4.jpg');
+    background-size: cover;
+}
+
+.darkened-background4 {
     background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('/images/background5.jpg');
+    background-size: cover;
+}
+
+.darkened-background5 {
+    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('/images/background6.jpg');
+    background-size: cover;
+}
+
+.darkened-background6 {
+    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('/images/background7.jpg');
+    background-size: cover;
+}
+
+.darkened-background7 {
+    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('/images/background8.jpg');
+    background-size: cover;
+}
+
+.darkened-background8 {
+    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('/images/background9.jpg');
     background-size: cover;
 }
 
@@ -154,7 +194,7 @@ body {
 }
 
 .landing-page-list {
-padding-left: 0.8rem;
+    padding-left: 0.8rem;
 }
 
 #landing-page-hr {
@@ -163,7 +203,7 @@ padding-left: 0.8rem;
     background-color: white;
 }
 
-.landing-page-list li{
+.landing-page-list li {
     padding-top: 0.8rem;
     padding-left: none;
 }
