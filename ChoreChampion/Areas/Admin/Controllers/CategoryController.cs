@@ -24,7 +24,7 @@ namespace ChoreChampion.Areas.Admin
         // GET - INDEX
         public async Task<IActionResult> Index()
         {
-            return View(await _db.Category.ToListAsync());
+            return View(await _db.Category.ToListAsync().ConfigureAwait(false));
         }
 
         // no async because we are not passing anything to the view
@@ -43,7 +43,7 @@ namespace ChoreChampion.Areas.Admin
             {
                 // if everything is valid
                 _db.Category.Add(category);
-                await _db.SaveChangesAsync();
+                await _db.SaveChangesAsync().ConfigureAwait(false);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -84,7 +84,7 @@ namespace ChoreChampion.Areas.Admin
             if (ModelState.IsValid)
             {
                 _db.Update(category);
-                await _db.SaveChangesAsync();
+                await _db.SaveChangesAsync().ConfigureAwait(false);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -131,7 +131,7 @@ namespace ChoreChampion.Areas.Admin
             else
             {
                 _db.Category.Remove(category);
-                await _db.SaveChangesAsync();
+                await _db.SaveChangesAsync().ConfigureAwait(false);
                 return RedirectToAction(nameof(Index));
             }
         }

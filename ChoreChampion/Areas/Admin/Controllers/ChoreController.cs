@@ -37,7 +37,7 @@ namespace ChoreChampion.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             // .Include to use eager loading to include associated category and subcategory.
-            var chores = await _db.Chore.Include(m => m.Category).Include(m => m.SubCategory).ToListAsync();
+            var chores = await _db.Chore.Include(m => m.Category).Include(m => m.SubCategory).OrderBy(m => m.DueDate).ToListAsync().ConfigureAwait(false);
             return View(chores);
         }
 
@@ -59,7 +59,7 @@ namespace ChoreChampion.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 _db.Chore.Add(ChoreVM.Chore);
-                await _db.SaveChangesAsync();
+                await _db.SaveChangesAsync().ConfigureAwait(false);
 
                 // Image saving below
                 string webRootPath = _hostingEnvironment.WebRootPath;
@@ -90,7 +90,7 @@ namespace ChoreChampion.Areas.Admin.Controllers
                     choreFromDb.BeforeImage = @"\images\" + ChoreVM.Chore.Id + ".png";
                 }
 
-                await _db.SaveChangesAsync();
+                await _db.SaveChangesAsync().ConfigureAwait(false);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -109,8 +109,8 @@ namespace ChoreChampion.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            ChoreVM.Chore = await _db.Chore.Include(m => m.Category).Include(m => m.SubCategory).SingleOrDefaultAsync(m => m.Id == id);
-            ChoreVM.SubCategory = await _db.SubCategory.Where(s => s.CategoryId == ChoreVM.Chore.CategoryId).ToListAsync();
+            ChoreVM.Chore = await _db.Chore.Include(m => m.Category).Include(m => m.SubCategory).SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
+            ChoreVM.SubCategory = await _db.SubCategory.Where(s => s.CategoryId == ChoreVM.Chore.CategoryId).ToListAsync().ConfigureAwait(false);
 
             if (ChoreVM.Chore == null)
             {
@@ -170,13 +170,13 @@ namespace ChoreChampion.Areas.Admin.Controllers
                 choreFromDb.SubCategoryId = ChoreVM.Chore.SubCategoryId;
                 choreFromDb.Name = ChoreVM.Chore.Name;
 
-                await _db.SaveChangesAsync();
+                await _db.SaveChangesAsync().ConfigureAwait(false);
 
                 return RedirectToAction(nameof(Index));
             }
             else
             {
-                ChoreVM.SubCategory = await _db.SubCategory.Where(s => s.CategoryId == ChoreVM.Chore.CategoryId).ToListAsync();
+                ChoreVM.SubCategory = await _db.SubCategory.Where(s => s.CategoryId == ChoreVM.Chore.CategoryId).ToListAsync().ConfigureAwait(false);
                 return View(ChoreVM);
             }
         }
@@ -192,7 +192,7 @@ namespace ChoreChampion.Areas.Admin.Controllers
             else
             {
                 // Find the chore with id matching the one passed in
-                ChoreVM.Chore = await _db.Chore.Include(m => m.Category).Include(m => m.SubCategory).SingleOrDefaultAsync(m => m.Id == id);
+                ChoreVM.Chore = await _db.Chore.Include(m => m.Category).Include(m => m.SubCategory).SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
 
                 if (ChoreVM.Chore == null)
                 {
@@ -215,7 +215,7 @@ namespace ChoreChampion.Areas.Admin.Controllers
             }
             else
             {
-                ChoreVM.Chore = await _db.Chore.Include(m => m.Category).Include(m => m.SubCategory).SingleOrDefaultAsync(m => m.Id == id);
+                ChoreVM.Chore = await _db.Chore.Include(m => m.Category).Include(m => m.SubCategory).SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
 
                 if (ChoreVM.Chore == null)
                 {
@@ -246,7 +246,7 @@ namespace ChoreChampion.Areas.Admin.Controllers
                 }
 
                 _db.Chore.Remove(chore);
-                await _db.SaveChangesAsync();
+                await _db.SaveChangesAsync().ConfigureAwait(false);
             }
 
             return RedirectToAction(nameof(Index));

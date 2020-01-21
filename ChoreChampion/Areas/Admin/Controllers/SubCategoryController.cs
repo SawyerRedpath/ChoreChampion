@@ -30,7 +30,7 @@ namespace ChoreChampion.Areas.Admin.Controllers
         {
             // This line will get all subcategories from the DB, and tells the db to include each category associated with each subcategory.
             // This is eager loading
-            var subCategories = await _db.SubCategory.Include(s => s.Category).ToListAsync();
+            var subCategories = await _db.SubCategory.Include(s => s.Category).ToListAsync().ConfigureAwait(false);
             // Pass this list of subcategories (with categories includes) to view
             return View(subCategories);
         }
@@ -40,10 +40,10 @@ namespace ChoreChampion.Areas.Admin.Controllers
         {
             SubCategoryAndCategoryViewModel model = new SubCategoryAndCategoryViewModel()
             {
-                CategoryList = await _db.Category.ToListAsync(),
+                CategoryList = await _db.Category.ToListAsync().ConfigureAwait(false),
                 SubCategory = new Models.SubCategory(),
                 // Get subcategories ordered by name, return each subcategory name, return only distinct records
-                SubCategoryList = await _db.SubCategory.OrderBy(p => p.Name).Select(p => p.Name).Distinct().ToListAsync()
+                SubCategoryList = await _db.SubCategory.OrderBy(p => p.Name).Select(p => p.Name).Distinct().ToListAsync().ConfigureAwait(false)
             };
 
             return View(model);
@@ -68,16 +68,16 @@ namespace ChoreChampion.Areas.Admin.Controllers
                 else
                 {
                     _db.SubCategory.Add(model.SubCategory);
-                    await _db.SaveChangesAsync();
+                    await _db.SaveChangesAsync().ConfigureAwait(false);
                     return RedirectToAction(nameof(Index));
                 }
             }
 
             SubCategoryAndCategoryViewModel modelVM = new SubCategoryAndCategoryViewModel()
             {
-                CategoryList = await _db.Category.ToListAsync(),
+                CategoryList = await _db.Category.ToListAsync().ConfigureAwait(false),
                 SubCategory = model.SubCategory,
-                SubCategoryList = await _db.SubCategory.OrderBy(p => p.Name).Select(p => p.Name).ToListAsync(),
+                SubCategoryList = await _db.SubCategory.OrderBy(p => p.Name).Select(p => p.Name).ToListAsync().ConfigureAwait(false),
                 StatusMessage = StatusMessage
             };
             return View(modelVM);
@@ -91,7 +91,7 @@ namespace ChoreChampion.Areas.Admin.Controllers
             // Select each subcategory in the subcategory db where the categoryid matches the id passed in
             subCategories = await (from subCategory in _db.SubCategory
                                    where subCategory.CategoryId == id
-                                   select subCategory).ToListAsync();
+                                   select subCategory).ToListAsync().ConfigureAwait(false);
 
             return Json(new SelectList(subCategories, "Id", "Name"));
         }
@@ -105,7 +105,7 @@ namespace ChoreChampion.Areas.Admin.Controllers
             }
             else
             {
-                var subCategory = await _db.SubCategory.SingleOrDefaultAsync(m => m.Id == id);
+                var subCategory = await _db.SubCategory.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
 
                 if (subCategory == null)
                 {
@@ -115,10 +115,10 @@ namespace ChoreChampion.Areas.Admin.Controllers
                 {
                     SubCategoryAndCategoryViewModel model = new SubCategoryAndCategoryViewModel()
                     {
-                        CategoryList = await _db.Category.ToListAsync(),
+                        CategoryList = await _db.Category.ToListAsync().ConfigureAwait(false),
                         SubCategory = subCategory,
                         // Get subcategories ordered by name, return each subcategory name, return only distinct records
-                        SubCategoryList = await _db.SubCategory.OrderBy(p => p.Name).Select(p => p.Name).Distinct().ToListAsync()
+                        SubCategoryList = await _db.SubCategory.OrderBy(p => p.Name).Select(p => p.Name).Distinct().ToListAsync().ConfigureAwait(false)
                     };
                     return View(model);
                 }
@@ -148,16 +148,16 @@ namespace ChoreChampion.Areas.Admin.Controllers
                     // Change the name for that subcategory to the new passed in name
                     subCategoryFromDb.Name = model.SubCategory.Name;
 
-                    await _db.SaveChangesAsync();
+                    await _db.SaveChangesAsync().ConfigureAwait(false);
                     return RedirectToAction(nameof(Index));
                 }
             }
 
             SubCategoryAndCategoryViewModel modelVM = new SubCategoryAndCategoryViewModel()
             {
-                CategoryList = await _db.Category.ToListAsync(),
+                CategoryList = await _db.Category.ToListAsync().ConfigureAwait(false),
                 SubCategory = model.SubCategory,
-                SubCategoryList = await _db.SubCategory.OrderBy(p => p.Name).Select(p => p.Name).ToListAsync(),
+                SubCategoryList = await _db.SubCategory.OrderBy(p => p.Name).Select(p => p.Name).ToListAsync().ConfigureAwait(false),
                 StatusMessage = StatusMessage
             };
             return View(modelVM);
@@ -170,7 +170,7 @@ namespace ChoreChampion.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var subCategory = await _db.SubCategory.Include(s => s.Category).SingleOrDefaultAsync(m => m.Id == id);
+            var subCategory = await _db.SubCategory.Include(s => s.Category).SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (subCategory == null)
             {
                 return NotFound();
@@ -186,7 +186,7 @@ namespace ChoreChampion.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var subCategory = await _db.SubCategory.Include(s => s.Category).SingleOrDefaultAsync(m => m.Id == id);
+            var subCategory = await _db.SubCategory.Include(s => s.Category).SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (subCategory == null)
             {
                 return NotFound();
@@ -200,9 +200,9 @@ namespace ChoreChampion.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var subCategory = await _db.SubCategory.SingleOrDefaultAsync(m => m.Id == id);
+            var subCategory = await _db.SubCategory.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             _db.SubCategory.Remove(subCategory);
-            await _db.SaveChangesAsync();
+            await _db.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToAction(nameof(Index));
         }
     }

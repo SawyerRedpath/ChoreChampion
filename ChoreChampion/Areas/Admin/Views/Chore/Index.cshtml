@@ -42,23 +42,33 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
-                            <td class="non-bold-text">
-                                @Html.DisplayFor(m => item.Name)
+                    <tr>
+                        <td class="non-bold-text">
+                            @Html.DisplayFor(m => item.Name)
+                        </td>
+                        <td class="non-bold-text">
+                            @Html.DisplayFor(m => item.Category.Name)
+                        </td>
+                        <td class="non-bold-text">
+                            @Html.DisplayFor(m => item.SubCategory.Name)
+                        </td>
+                        @if (item.DueDate < DateTime.Now.Date)
+                        {
+                            <td class="non-bold-text text-danger">
+                                <i class="fas fa-exclamation-triangle"></i>  @item.DueDate.ToString("dddd, MMMM dd, yyyy")
                             </td>
-                            <td class="non-bold-text">
-                                @Html.DisplayFor(m => item.Category.Name)
-                            </td>
-                            <td class="non-bold-text">
-                                @Html.DisplayFor(m => item.SubCategory.Name)
-                            </td>
+                        }
+                        else
+                        {
                             <td class="non-bold-text">
                                 @item.DueDate.ToString("dddd, MMMM dd, yyyy")
                             </td>
-                            <td>
-                                <partial name="_TableEditDetailDeleteButtonsPartial" model="item.Id" />
-                            </td>
-                        </tr>
+                        }
+
+                        <td>
+                            <partial name="_TableEditDetailDeleteButtonsPartial" model="item.Id" />
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>
