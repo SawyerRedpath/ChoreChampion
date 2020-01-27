@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using ChoreChampion.Utility
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -17,7 +18,8 @@
               crossorigin="anonymous"
               integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" />
         <script src="https://kit.fontawesome.com/ccb58f7097.js" crossorigin="anonymous"></script>
-        <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Slab:700,800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?fam
+        <a href="C:\Users\Sawyer\source\repos\ChoreChampion\ChoreChampion\Views\Shared\_DeleteAndBackToListButton.cshtml">C:\Users\Sawyer\source\repos\ChoreChampion\ChoreChampion\Views\Shared\_DeleteAndBackToListButton.cshtml</a>ily=Roboto|Roboto+Slab:700,800&display=swap" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css" rel="stylesheet" type="text/css" />
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
@@ -34,6 +36,9 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
+
+                        @if (User.IsInRole(StaticDetails.AdminUser))
+                        {
                         <li class="nav-item dropdown text-white-50">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropDownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Chore Management
@@ -44,15 +49,18 @@
                                 <a class="dropdown-item" asp-area="Admin" asp-controller="Chore" asp-action="Index">Chores</a>
                                 <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Index">Users</a>
                                 <a class="dropdown-item">Rewards</a>
-                                
                             </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        }
+
+                        @if (User.IsInRole(StaticDetails.RegularUser))
+                        {
+                            <li style="color:white">
+                                <a href="#" class="nav-link">My Chores (0)</a>
+                            </li>
+                        }
+
+
                     </ul>
                 </div>
             </div>

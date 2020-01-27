@@ -39,10 +39,20 @@ namespace ChoreChampion
             services.AddSingleton<IEmailSender, EmailSender>();
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
+
+            services.ConfigureApplicationCookie(options =>
+
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+
+                options.LogoutPath = $"/Identity/Account/Logout";
+
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

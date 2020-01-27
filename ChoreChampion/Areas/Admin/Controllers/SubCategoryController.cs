@@ -5,12 +5,15 @@ using System.Threading.Tasks;
 using ChoreChampion.Data;
 using ChoreChampion.Models;
 using ChoreChampion.Models.ViewModels;
+using ChoreChampion.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChoreChampion.Areas.Admin.Controllers
 {
+    [Authorize(Roles = StaticDetails.AdminUser)]
     [Area("Admin")]
     public class SubCategoryController : Controller
     {

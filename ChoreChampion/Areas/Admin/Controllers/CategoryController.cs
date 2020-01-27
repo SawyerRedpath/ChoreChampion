@@ -4,11 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChoreChampion.Data;
 using ChoreChampion.Models;
+using ChoreChampion.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChoreChampion.Areas.Admin
 {
+    [Authorize(Roles = StaticDetails.AdminUser)]
     [Area("Admin")]
     public class CategoryController : Controller
     {

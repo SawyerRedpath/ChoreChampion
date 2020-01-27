@@ -7,12 +7,14 @@ using ChoreChampion.Data;
 using ChoreChampion.Models;
 using ChoreChampion.Models.ViewModels;
 using ChoreChampion.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChoreChampion.Areas.Admin.Controllers
 {
+    [Authorize(Roles = StaticDetails.AdminUser)]
     [Area("Admin")]
     public class ChoreController : Controller
     {
