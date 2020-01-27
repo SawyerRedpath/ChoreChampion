@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using ChoreChampion.Models;
+using ChoreChampion.Utility;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -23,17 +25,20 @@ namespace ChoreChampion.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         [BindProperty]
@@ -60,6 +65,18 @@ namespace ChoreChampion.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Required]
+            [Display(Name = "First name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Last name")]
+            public string LastName { get; set; }
+
+            // House hold name to be filled by Admin when creating group
+            [Display(Name = "House-hold name")]
+            public string HouseholdName { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -70,36 +87,71 @@ namespace ChoreChampion.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            string role = Request.Form["userRole"].ToString();
+
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync().ConfigureAwait(false)).ToList();
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+                var user = new ApplicationUser
+                {
+                    UserName = Input.Email,
+                    Email = Input.Email,
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    HouseholdName = Input.HouseholdName
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password).ConfigureAwait(false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
-
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user).ConfigureAwait(false);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code },
-                        protocol: Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.").ConfigureAwait(false);
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                    if (!await _roleManager.RoleExistsAsync(StaticDetails.RegularUser).ConfigureAwait(false))
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
+                        await _roleManager.CreateAsync(new IdentityRole(StaticDetails.RegularUser)).ConfigureAwait(false);
+                    }
+
+                    if (!await _roleManager.RoleExistsAsync(StaticDetails.AdminUser).ConfigureAwait(false))
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole(StaticDetails.AdminUser)).ConfigureAwait(false);
+                    }
+
+                    if (role == StaticDetails.RegularUser)
+                    {
+                        await _userManager.AddToRoleAsync(user, StaticDetails.RegularUser).ConfigureAwait(false);
+
+                        // Only auto sign in user if it is a regular user. If it is an admin user then they are already logged in.
+                        await _signInManager.SignInAsync(user, isPersistent: false).ConfigureAwait(false);
+
+                        return LocalRedirect(returnUrl);
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false).ConfigureAwait(false);
-                        return LocalRedirect(returnUrl);
+                        await _userManager.AddToRoleAsync(user, StaticDetails.AdminUser).ConfigureAwait(false);
+
+                        
                     }
+
+                    return RedirectToAction("Index", "User", new { area = "Admin" });
+
+                    _logger.LogInformation("User created a new account with password.");
+
+                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user).ConfigureAwait(false);
+                    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    //var callbackUrl = Url.Page(
+                    //    "/Account/ConfirmEmail",
+                    //    pageHandler: null,
+                    //    values: new { area = "Identity", userId = user.Id, code = code },
+                    //    protocol: Request.Scheme);
+
+                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                    //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.").ConfigureAwait(false);
+
+                    //if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                    //{
+                    //    return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
+                    //}
+                    //else
+                    //{
+                    //}
                 }
                 foreach (var error in result.Errors)
                 {

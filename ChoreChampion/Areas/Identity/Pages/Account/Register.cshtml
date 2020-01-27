@@ -1,4 +1,5 @@
 ﻿@page
+@using ChoreChampion.Utility
 @model RegisterModel
 @{
     ViewData["Title"] = "Register";
@@ -13,9 +14,24 @@
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
+                <label asp-for="Input.FirstName"></label>
+                <input asp-for="Input.FirstName" class="form-control" />
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.LastName"></label>
+                <input asp-for="Input.LastName" class="form-control" />
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Input.Email"></label>
                 <input asp-for="Input.Email" class="form-control" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.HouseholdName"></label>
+                <input asp-for="Input.HouseholdName" class="form-control" />
+                <span asp-validation-for="Input.HouseholdName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Input.Password"></label>
@@ -27,9 +43,18 @@
                 <input asp-for="Input.ConfirmPassword" class="form-control" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
+            @*If the user logged in is an admin then option displays to register an admin user*@
+            @if (User.IsInRole(StaticDetails.AdminUser))
+            {
+                <div class="form-group">
+                    <input type="radio" name="userRole" value="@StaticDetails.RegularUser" checked /> @StaticDetails.RegularUser
+                    <input type="radio" name="userRole" value="@StaticDetails.AdminUser" /> @StaticDetails.AdminUser
+                </div>
+            }
             <button type="submit" class="btn btn-primary">Register</button>
         </form>
     </div>
+
     <div class="col-md-6 col-md-offset-2">
         <section>
             <h4>Use another service to register.</h4>

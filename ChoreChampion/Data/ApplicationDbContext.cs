@@ -18,5 +18,7 @@ namespace ChoreChampion.Data
         public DbSet<SubCategory> SubCategory { get; set; }
 
         public DbSet<Chore> Chore { get; set; }
+
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
     }
 }

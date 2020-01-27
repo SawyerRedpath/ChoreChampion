@@ -9,7 +9,7 @@ using ChoreChampion.Models;
 
 namespace ChoreChampion.Controllers
 {
-    [Area("Worker")]
+    [Area("NonAdmin")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

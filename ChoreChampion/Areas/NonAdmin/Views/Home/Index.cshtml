@@ -26,8 +26,12 @@
         </div>
 
         <div class="p-4 flex-fill">
-            <a asp-area="Identity" asp-controller="Account" asp-action="Login" type="button" class="btn btn-primary btn-lg btn-block">Log In</a>
-            <a asp-area="Identity" asp-controller="Account" asp-action="Register" type="button" class="btn btn-success btn-lg btn-block">Register</a>
+            @*If no user is logged in then show login and register options*@
+            @if (User.Identity.Name == null)
+            {
+                <a asp-area="Identity" asp-controller="Account" asp-action="Login" type="button" class="btn btn-primary btn-lg btn-block">Log In</a>
+                <a asp-area="Identity" asp-controller="Account" asp-action="Register" type="button" class="btn btn-success btn-lg btn-block">Register</a>
+            }
         </div>
     </div>
 </body>

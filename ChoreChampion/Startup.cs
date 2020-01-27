@@ -12,6 +12,8 @@ using ChoreChampion.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ChoreChampion.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace ChoreChampion
 {
@@ -30,8 +32,11 @@ namespace ChoreChampion
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddSingleton<IEmailSender, EmailSender>();
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
         }
@@ -62,7 +67,7 @@ namespace ChoreChampion
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{area=Worker}/{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{area=NonAdmin}/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }
