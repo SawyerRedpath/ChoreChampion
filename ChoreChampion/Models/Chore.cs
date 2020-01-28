@@ -35,5 +35,11 @@ namespace ChoreChampion.Models
 
         [Display(Name = "Sub Category")]
         public int SubCategoryId { get; set; }
+
+        [ForeignKey("UserId")]
+        public virtual ApplicationUser User { get; set; }
+
+        [Display(Name = "User")]
+        public string UserId { get; set; }
     }
 }

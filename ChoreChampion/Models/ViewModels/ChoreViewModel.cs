@@ -12,5 +12,7 @@ namespace ChoreChampion.Models.ViewModels
         public IEnumerable<Category> Category { get; set; }
 
         public IEnumerable<SubCategory> SubCategory { get; set; }
+
+        public IEnumerable<ApplicationUser> User { get; set; }
     }
 }
