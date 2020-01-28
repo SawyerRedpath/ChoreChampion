@@ -31,7 +31,8 @@ namespace ChoreChampion.Areas.Admin.Controllers
             ChoreVM = new ChoreViewModel()
             {
                 Category = _db.Category,
-                Chore = new Chore()
+                Chore = new Chore(),
+                User = _db.ApplicationUser
             };
         }
 
@@ -39,7 +40,7 @@ namespace ChoreChampion.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             // .Include to use eager loading to include associated category and subcategory.
-            var chores = await _db.Chore.Include(m => m.Category).Include(m => m.SubCategory).OrderByDescending(m => m.DueDate).ToListAsync().ConfigureAwait(false);
+            var chores = await _db.Chore.Include(m => m.Category).Include(m => m.SubCategory).Include(m => m.User).OrderByDescending(m => m.DueDate).ToListAsync().ConfigureAwait(false);
             return View(chores);
         }
 
@@ -57,6 +58,7 @@ namespace ChoreChampion.Areas.Admin.Controllers
         public async Task<IActionResult> CreatePOST()
         {
             ChoreVM.Chore.SubCategoryId = Convert.ToInt32(Request.Form["SubCategoryId"].ToString());
+            ChoreVM.User = await _db.ApplicationUser.ToListAsync().ConfigureAwait(false);
 
             if (ModelState.IsValid)
             {

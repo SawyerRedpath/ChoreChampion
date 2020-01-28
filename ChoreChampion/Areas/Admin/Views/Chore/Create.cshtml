@@ -59,7 +59,7 @@
                 <label asp-for="Chore.UserId" class="col-form-label"></label>
             </div>
             <div class="col-5">
-                <select asp-for="@Model.Chore.UserId" id="UserId" asp-items="Model.User.ToSelectListItem(1)" class="form-control"></select>
+                <select asp-for="@Model.Chore.UserId" id="UserId" asp-items="Model.User.ToSelectListItem(Model.Chore.UserId)" class="form-control"></select>
             </div>
         </div>
         <div class="form-group row">

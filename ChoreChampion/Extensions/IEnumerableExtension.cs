@@ -28,5 +28,17 @@ namespace ChoreChampion.Extensions
                        Selected = item.GetPropertyValue("Id").Equals(selectedValue.ToString())
                    };
         }
+
+        public static IEnumerable<SelectListItem> ToSelectListItem<T>(this IEnumerable<T> items, string selectedValue)
+        {
+            return from item in items
+                   select new SelectListItem
+                   {
+                       Text = item.GetPropertyValue("Name"),
+                       Value = item.GetPropertyValue("Id"),
+                       // If the id of this item matches the id selected value id passed ot this method then mark this item as selected
+                       Selected = item.GetPropertyValue("Id").Equals(selectedValue)
+                   };
+        }
     }
 }

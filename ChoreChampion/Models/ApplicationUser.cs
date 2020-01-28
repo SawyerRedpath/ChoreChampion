@@ -12,6 +12,11 @@ namespace ChoreChampion.Models
 
         public string LastName { get; set; }
 
+        public string Name
+        {
+            get { return FirstName + " " + LastName; }
+        }
+
         public string HouseholdName { get; set; }
 
         public int HouseholdId { get; set; }
