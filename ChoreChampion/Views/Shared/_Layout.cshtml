@@ -56,7 +56,7 @@
                         @if (User.IsInRole(StaticDetails.RegularUser))
                         {
                             <li style="color:white">
-                                <a href="#" class="nav-link">My Chores (0)</a>
+                                <a asp-area="NonAdmin" asp-controller="Chore" asp-action="Index" class="nav-link">My Chores (0)</a>
                             </li>
                         }
 

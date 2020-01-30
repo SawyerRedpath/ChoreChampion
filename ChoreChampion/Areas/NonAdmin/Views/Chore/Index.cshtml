@@ -1,0 +1,92 @@
+﻿@model IEnumerable<Chore>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<br />
+<div class="border backgroundWhite">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-dark header-bold">Pending Chores</h2>
+        </div>
+    </div>
+    <br />
+    <div>
+        @if (Model.Count() > 0)
+        {
+
+            <table class="table table-striped border">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>
+                            Chore
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => m.CategoryId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => m.SubCategoryId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => m.DueDate)
+                        </th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        @if ((item.DueDate - DateTime.Now).TotalDays > -4)
+                        {
+                    <tr>
+                        <td class="non-bold-text">
+                           <strong> @Html.DisplayFor(m => item.Name)</strong>
+                        </td>
+                        <td class="non-bold-text">
+                            @Html.DisplayFor(m => item.Category.Name)
+                        </td>
+                        <td class="non-bold-text">
+                            @Html.DisplayFor(m => item.SubCategory.Name)
+                        </td>
+                        @*Ensure that no the chore is no more than 3 days past due date, otherwise dont display*@
+
+                        @if (item.DueDate < DateTime.Now.Date)
+                        {
+                            <td class="non-bold-text text-danger">
+                                <i class="fas fa-exclamation-triangle"></i>  @item.DueDate.ToString("dddd, MMMM dd, yyyy")
+                            </td>
+                        }
+                        else if (Convert.ToInt32(Math.Floor((item.DueDate - DateTime.Now).TotalDays)) == 0 ||
+                                    Convert.ToInt32(Math.Floor((item.DueDate - DateTime.Now).TotalDays)) == 1  )
+                        {
+                            <td class="non-bold-text">
+                                <i class="far fa-hourglass text-danger"></i> @item.DueDate.ToString("dddd, MMMM dd, yyyy")
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="non-bold-text">
+                                @item.DueDate.ToString("dddd, MMMM dd, yyyy")
+                            </td>
+                        }
+
+
+
+                        <td>
+                            <partial name="_TableMarkChoreCompleteButton" model="item.Id" />
+                        </td>
+                    </tr>
+                            }
+                        }
+                    </tbody>
+            </table>
+        }
+        else
+        {
+            <p>You are all caught up on your chores!! Well done &nbsp;<i class="fas fa-thumbs-up"></i> </p>
+        }
+    </div>
+</div>

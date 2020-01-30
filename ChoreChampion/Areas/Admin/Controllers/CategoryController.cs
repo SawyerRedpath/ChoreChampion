@@ -25,6 +25,7 @@ namespace ChoreChampion.Areas.Admin
         }
 
         // GET - INDEX
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View(await _db.Category.ToListAsync().ConfigureAwait(false));
@@ -32,6 +33,7 @@ namespace ChoreChampion.Areas.Admin
 
         // no async because we are not passing anything to the view
         // GET - CREATE
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -57,6 +59,7 @@ namespace ChoreChampion.Areas.Admin
         }
 
         // GET - EDIT
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -98,6 +101,7 @@ namespace ChoreChampion.Areas.Admin
         }
 
         // GET - DELETE
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -140,6 +144,7 @@ namespace ChoreChampion.Areas.Admin
         }
 
         // GET - DETAILS
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

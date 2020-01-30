@@ -38,7 +38,7 @@
                 if (User.IsInRole(StaticDetails.RegularUser))
                 {
                     @*TO DO: Make this link to regular user chore section *@
-                    <a asp-area="#" asp-controller="#" asp-action="#" type="button" class="btn btn-primary btn-block btn-lg">My Chores &nbsp; <i class="fas fa-tasks"></i></a>
+                    <a asp-area="NonAdmin" asp-controller="Chore" asp-action="Index" type="button" class="btn btn-primary btn-block btn-lg">My Chores &nbsp; <i class="fas fa-tasks"></i></a>
                 }
                 else
                 {
