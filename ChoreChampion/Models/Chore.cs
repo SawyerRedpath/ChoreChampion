@@ -41,5 +41,8 @@ namespace ChoreChampion.Models
 
         [Display(Name = "User")]
         public string UserId { get; set; }
+
+        [Display(Name = "After Picture")]
+        public string AfterImage { get; set; }
     }
 }

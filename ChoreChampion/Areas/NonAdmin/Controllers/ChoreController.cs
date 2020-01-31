@@ -40,5 +40,27 @@ namespace ChoreChampion.Areas.NonAdmin.Controllers
                 .ConfigureAwait(false);
             return View(chores);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> CompleteChore(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var chore = await _db.Chore.Include(m => m.Category).Include(m => m.SubCategory).SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
+
+                if (chore == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return View(chore);
+                }
+            }
+        }
     }
 }
