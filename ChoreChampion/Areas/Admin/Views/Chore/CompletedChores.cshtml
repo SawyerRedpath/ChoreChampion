@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Chore>
 @{
-    ViewData["Title"] = "Incomplete Chores";
+    ViewData["Title"] = "Completed Chores";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,11 +9,10 @@
 <div class="border backgroundWhite">
     <div class="row">
         <div class="col-6">
-            <h2 class="text-dark header-bold">Incomplete Chores</h2>
+            <h2 class="text-dark header-bold">Completed Chores</h2>
         </div>
         <div class="col-6 text-right">
-            <partial name="_ViewCompletedChoresButtonPartial" />
-            <partial name="_CreateButtonPartial" />
+            <partial name="_BackButtonPartial" />
         </div>
     </div>
     <br />

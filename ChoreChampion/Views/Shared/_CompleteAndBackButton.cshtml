@@ -1,7 +1,7 @@
-﻿
+﻿@model int
 <div class="row">
     <div class="col-6">
-        <button type="submit" class="btn btn-success form-control"><i class="fas fa-check"></i>&nbsp;Complete Chore</button>
+        <input type="submit" asp-route-id="@Model" class="btn btn-success form-control" value="Complete Chore" />
     </div>
     <div class="col-6">
         <a asp-action="Index" class="btn btn-secondary form-control"><i class="fas fa-undo-alt"></i>&nbsp;Back</a>

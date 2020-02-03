@@ -70,8 +70,17 @@
             </fieldset>
         </div>
         <div class="col-3 offset-1">
-            <img src="@Model.Chore.BeforeImage" width="100%" style="border-radius:5px;border: 1px solid #bbb9b9;" />
+            <label class="col-form-label">Before Image</label>
+            <img src="@Model.Chore.BeforeImage" width="100%" style="border-radius:5px;border: 1px solid #bbb9b9;margin-bottom:1rem" />
+
+            @if (Model.Chore.AfterImage != null)
+            {
+                <label class="col-form-label">After Image</label>
+                <img src="@Model.Chore.AfterImage" width="100%" style="border-radius:5px;border: 1px solid #bbb9b9;" />
+            }
         </div>
+
+
 
         <div class="col-8">
             <div class="col-8 offset-4">

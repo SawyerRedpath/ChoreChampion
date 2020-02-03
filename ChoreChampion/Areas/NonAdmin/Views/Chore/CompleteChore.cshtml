@@ -11,6 +11,7 @@
 
 <form method="post" enctype="multipart/form-data">
     <div class="border backgroundWhite row">
+        <input type="hidden" asp-for="Id" />
         <div class="col-8">
             <fieldset disabled>
                 <div class="form-group row">
@@ -53,7 +54,7 @@
                     </div>
 
                     <div class="col-8">
-                            <input value="@Model.DueDate.ToString("dddd, MMMM dd, yyyy")"class="form-control" type="text" readonly />
+                        <input value="@Model.DueDate.ToString("dddd, MMMM dd, yyyy")" class="form-control" type="text" readonly />
                     </div>
                 </div>
             </fieldset>
@@ -61,21 +62,22 @@
             <br />
             <div class="form-group row">
                 <div class="col-4">
-                    <label  class="col-form-label" style="color:blue">Upload After Image</label>
+                    <label class="col-form-label" style="color:blue">Upload After Image</label>
                 </div>
                 <div class="col-8">
-                    <input type="file" name="files" multiple  />
+                    <input type="file" name="files" multiple />
                 </div>
             </div>
             <br />
             <hr />
         </div>
         <div class="col-3 offset-1">
+            <label class="col-form-label">Before Image</label>
             <img src="@Model.BeforeImage" width="100%" style="border-radius:5px;border: 1px solid #bbb9b9;" />
         </div>
         <div class="col-8">
             <div class="col-8 offset-4">
-                <partial name="_CompleteAndBackButton" />
+                <partial name="_CompleteAndBackButton" model="Model.Id" />
             </div>
         </div>
     </div>
@@ -93,14 +95,13 @@
 
     <script type="text/javascript">
         $(function () {
-  $("#datepicker").datepicker({
-        autoclose: true,
-        todayHighlight: true
-  }).datepicker('update', new Date());
-});
+            $("#datepicker").datepicker({
+                autoclose: true,
+                todayHighlight: true
+            }).datepicker('update', new Date());
+        });
 
         $("#Date").datepicker();
-
     </script>
 
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}

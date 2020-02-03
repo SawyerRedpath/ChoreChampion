@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ChoreChampion.Data;
@@ -33,6 +35,7 @@ namespace ChoreChampion.Areas.NonAdmin.Controllers
             string userId = _userManager.GetUserId(User);
 
             var chores = await _db.Chore.Where(m => m.UserId == userId).Where(m => m.IsComplete == false)
+                .Where(m => m.DueDate >= DateTime.Now.AddDays(-2))
                 .Include(m => m.Category)
                 .Include(m => m.SubCategory)
                 .OrderByDescending(m => m.DueDate)
@@ -60,6 +63,46 @@ namespace ChoreChampion.Areas.NonAdmin.Controllers
                 {
                     return View(chore);
                 }
+            }
+        }
+
+        // POST - CompleteChore
+        [HttpPost, ActionName("CompleteChore")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CompleteChorePost(int? id)
+        {
+            if (ModelState.IsValid)
+            {
+                // Image saving below
+                string webRootPath = _hostingEnvironment.WebRootPath;
+                // Uploaded files from the form (will only be one)
+                var files = HttpContext.Request.Form.Files;
+
+                // The chore that was just added to the database
+                var choreFromDb = await _db.Chore.FindAsync(id);
+
+                // File has been uploaded
+                if (files.Count > 0)
+                {
+                    var uploads = Path.Combine(webRootPath, "images\\AfterImages");
+                    var extension = Path.GetExtension(files[0].FileName);
+
+                    using (var fileStream = new FileStream(Path.Combine(uploads, id + extension), FileMode.Create))
+                    {
+                        files[0].CopyTo(fileStream);
+                    }
+                    choreFromDb.AfterImage = @"\images\AfterImages\" + id + extension;
+                }
+
+                choreFromDb.IsComplete = true;
+
+                await _db.SaveChangesAsync().ConfigureAwait(false);
+
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return View(id);
             }
         }
     }
