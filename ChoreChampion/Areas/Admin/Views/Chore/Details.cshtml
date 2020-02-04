@@ -84,7 +84,14 @@
 
         <div class="col-8">
             <div class="col-8 offset-4">
-                <partial name="_DetailsAndBackToListButtons" model="Model.Chore.Id" />
+                @if (Model.Chore.IsComplete == false)
+                {
+                    <partial name="_DetailsAndBackToListButtons" model="Model.Chore.Id" />
+                }
+                else
+                {
+                    <partial name="_BackButtonPartial" />
+                }
             </div>
         </div>
     </div>
